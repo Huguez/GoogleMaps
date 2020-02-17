@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Marcador } from 'src/app/classes/marcador.class';
 
 @Component({
   selector: 'app-mapa',
@@ -7,13 +8,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MapaComponent implements OnInit {
 
-  title = "un lugar";
+
+  marcadores: Marcador [] = [];
   lat = 51.678418;
   lng = 7.809007;
 
-  constructor() { }
+  constructor() {
+    if( localStorage.getItem( 'marcadores' ) ){
+      this.marcadores = JSON.parse( localStorage.getItem( 'marcadores' ) );
+    }
+  }
 
   ngOnInit() {
+  }
+  
+  agregarMarcador( evento ){
+
+    const coords: {lat:number, lng: number } = evento.coords;
+
+    const nuevoMarcador = new Marcador( coords.lat, coords.lng, "un titulo", "una descripcion." );
+
+    this.marcadores.push( nuevoMarcador );
+
+    this.guardarStorage();
+  }
+
+  guardarStorage(){
+    localStorage.setItem('marcadores', JSON.stringify( this.marcadores ) );
+
   }
 
 }
